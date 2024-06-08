@@ -16,10 +16,14 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 # Find the Qt6 package
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
+# Add Google Test
+add_subdirectory(googletest)
+
 # Enable AUTOMOC
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 
-# Add the executable
+# Add the main executable
 add_executable(2048_Solver
     src/main.cpp
     src/Game.cpp
@@ -35,3 +39,26 @@ target_include_directories(2048_Solver PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 # Link Qt6 libraries
 target_link_libraries(2048_Solver Qt6::Widgets)
+
+# Add test executable
+add_executable(2048_Solver_test
+    tests/tests.cpp
+    src/Game.cpp
+    include/Game.hpp
+)
+
+# Link Qt6 libraries
+target_link_libraries(2048_Solver_test Qt6::Widgets)
+
+# Link Google Test libraries
+target_link_libraries(2048_Solver_test
+    gtest
+    gtest_main
+)
+
+# Include directories for tests
+target_include_directories(2048_Solver_test PUBLIC "${PROJECT_SOURCE_DIR}/include")
+
+# Enable testing
+enable_testing()
+add_test(NAME 2048_Solver_test COMMAND 2048_Solver_test)

@@ -36,6 +36,8 @@ public:
 	int getGridSize();
 	bool isGameOver();
 	friend bool operator==(const Game& left, const Game& right);
+    friend class GameTest_AddTileWorksCorrectly_Test;
+    friend class GameTest_AddTileFailsWhenGridIsFull_Test;
 
 public slots:
 	void handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, std::shared_ptr<Game> game);
