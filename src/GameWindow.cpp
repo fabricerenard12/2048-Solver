@@ -49,6 +49,17 @@ void GameWindow::keyPressEvent(QKeyEvent* event) {
         bestMoves = performMC(*(game_.get()), NUMBER_OF_SIMULATIONS_PER_MOVE);
     }
 
+    // if (event->key() == SPACEBAR_CHAR) {
+    //     // Determine the depth dynamically or set a fixed depth, e.g., 3
+    //     int depth = determineDepth(game_->getGrid());
+        
+    //     // Use Expectimax to find the best move and its evaluation score
+    //     std::pair<Move, double> bestMove = findBestMove(game_, depth);
+        
+    //     // Add the best move and its evaluation score to the map
+    //     bestMoves[bestMove.second] = bestMove.first;
+    // }
+
     emit keyPressed(event->key(), bestMoves, game_);
 
     QWidget::keyPressEvent(event);

@@ -265,11 +265,10 @@ void Game::setGrid(Grid grid) {
 }
 
 bool Game::isGameOver() {
-    // std::cout << *this << std::endl;
-    // Game game = *this;
-    // if (!(game.moveLeft() || game.moveRight() || game.moveUp() || game.moveDown())) {
-    //     return true;
-    // }
+    Game game = *this;
+    if (!(game.moveLeft() || game.moveRight() || game.moveUp() || game.moveDown())) {
+        return true;
+    }
 
     return false;
 }

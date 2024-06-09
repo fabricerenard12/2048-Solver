@@ -29,9 +29,11 @@ add_executable(2048_Solver
     src/Game.cpp
     src/GameWindow.cpp
     src/MonteCarlo.cpp
+    src/Expectimax.cpp
     include/Game.hpp
     include/GameWindow.hpp
     include/MonteCarlo.hpp
+    include/Expectimax.hpp
 )
 
 # Include directories

@@ -16,10 +16,11 @@
 #include <QIcon>
 #include <QThread>
 
+#include "Expectimax.hpp"
 #include "MonteCarlo.hpp"
 
 constexpr int SPACEBAR_CHAR = 32;
-constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 1;
+constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 50;
 constexpr int WINDOW_SIZE = 500;
 constexpr int GRID_SPACING = 10;
 

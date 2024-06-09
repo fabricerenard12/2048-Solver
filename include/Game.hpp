@@ -37,8 +37,11 @@ public:
 	bool moveDown();
 	int getScore();
 	Grid getGrid();
+	void setGrid(Grid grid); //TODO: set as private
 	int getGridSize();
 	bool isGameOver();
+	bool makeMove(Move move); // TODO: set as private
+
 	friend bool operator==(const Game& left, const Game& right);
 	friend std::ostream& operator<<(std::ostream& os, const Game& game);
     friend class GameTest_AddTileWorksCorrectly_Test;
@@ -53,8 +56,6 @@ private:
 	void flip();
 	void transpose();
 	bool addTile();
-	void setGrid(Grid grid);
-	bool makeMove(Move move);
 
 	Grid grid_;
 	int score_;
