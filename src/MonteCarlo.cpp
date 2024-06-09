@@ -3,6 +3,9 @@
 // Date : 23 / 06 / 2023
 
 #include "MonteCarlo.hpp"
+#include <thread>
+#include <vector>
+#include <future>
 
 Game move(Game game, Move move) {
     // Perform move on game
@@ -32,7 +35,6 @@ void simulate(Game& game, std::mt19937& localGen, double& localScore) {
 
     std::uniform_int_distribution<int> intDistribution(minValue, maxValue);
 
-    // Simulate game until end
     while (!game.isGameOver()) {
         Move randomMove = static_cast<Move>(intDistribution(localGen));
 
@@ -54,7 +56,6 @@ void simulate(Game& game, std::mt19937& localGen, double& localScore) {
         }
     }
 
-    // Update local score
     localScore += game.getScore();
 }
 
@@ -64,19 +65,28 @@ std::map<double, Move, Compare> performMC(Game game, int numberOfSimulationsPerM
     std::vector<double> scores(4, 0.0);
     std::map<double, Move, Compare> moves;
 
-    // Compute best move using Monte Carlo Computation
+    // Parallel processing setup
+    std::vector<std::future<double>> futures;
+
     for (int j = 0; j < 4; j++) {
         Move currentMove = static_cast<Move>(j);
 
         for (int i = 0; i < numberOfSimulationsPerMove; i++) {
-            Game gameCopy = move(game, currentMove);
-            double localScore = 0.0;
-            simulate(gameCopy, gen, localScore);
-            scores[j] += localScore;
+            futures.emplace_back(std::async(std::launch::async, [&, currentMove, gen]() mutable {
+                Game gameCopy = move(game, currentMove);
+                double localScore = 0.0;
+                simulate(gameCopy, gen, localScore);
+                return localScore;
+            }));
         }
     }
 
-    // Construct moves map
+    for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < numberOfSimulationsPerMove; i++) {
+            scores[j] += futures[j * numberOfSimulationsPerMove + i].get();
+        }
+    }
+
     for (int i = 0; i < 4; i++) {
         moves.insert({ scores[i], static_cast<Move>(i) });
     }

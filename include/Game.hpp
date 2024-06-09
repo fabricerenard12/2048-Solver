@@ -5,6 +5,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <bitset>
+#include <cstdint>
 #include <iomanip>
 #include <iostream>
 #include <random>
@@ -12,9 +14,10 @@
 #include <QDebug>
 #include <QObject>
 #include <vector>
-#include <gtest/gtest.h>
+// #include <gtest/gtest.h>
 
-using Grid = std::vector<std::vector<int>>;
+using Grid = uint64_t;
+constexpr int GRID_SIZE = 4;
 enum class Move { LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3 };
 
 struct Compare {
@@ -26,7 +29,7 @@ struct Compare {
 class Game : public QObject {
 	Q_OBJECT
 public:
-	Game(int gridSize);
+	Game();
 	Game(const Game& other);
 	bool moveLeft();
 	bool moveRight();
@@ -37,6 +40,7 @@ public:
 	int getGridSize();
 	bool isGameOver();
 	friend bool operator==(const Game& left, const Game& right);
+	friend std::ostream& operator<<(std::ostream& os, const Game& game);
     friend class GameTest_AddTileWorksCorrectly_Test;
     friend class GameTest_AddTileFailsWhenGridIsFull_Test;
 
@@ -53,19 +57,18 @@ private:
 	bool makeMove(Move move);
 
 	Grid grid_;
-	int gridSize_;
 	int score_;
 	std::random_device rd_;
 	std::mt19937 gen_;
 
-	FRIEND_TEST(GameTest, AddTileWorksCorrectly);
-	FRIEND_TEST(GameTest, AddTileFailsWhenGridIsFull);
-	FRIEND_TEST(GameTest, MoveLeftWorks);
-	FRIEND_TEST(GameTest, MoveRightWorks);
-	FRIEND_TEST(GameTest, MoveUpWorks);
-	FRIEND_TEST(GameTest, MoveDownWorks);
-	FRIEND_TEST(GameTest, IsGameOver);
-	FRIEND_TEST(GameTest, ScoreCalculation);
+	// FRIEND_TEST(GameTest, AddTileWorksCorrectly);
+	// FRIEND_TEST(GameTest, AddTileFailsWhenGridIsFull);
+	// FRIEND_TEST(GameTest, MoveLeftWorks);
+	// FRIEND_TEST(GameTest, MoveRightWorks);
+	// FRIEND_TEST(GameTest, MoveUpWorks);
+	// FRIEND_TEST(GameTest, MoveDownWorks);
+	// FRIEND_TEST(GameTest, IsGameOver);
+	// FRIEND_TEST(GameTest, ScoreCalculation);
 	friend class GameWindow;
 };
 
