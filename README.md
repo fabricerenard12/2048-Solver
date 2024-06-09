@@ -1,4 +1,4 @@
-# 2048-Solver-WASM
+# 2048-Solver-but-better
 
 ## Overview
 
