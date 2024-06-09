@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QObject>
 #include <vector>
+#include <gtest/gtest.h>
 
 using Grid = std::vector<std::vector<int>>;
 enum class Move { LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3 };
@@ -48,6 +49,7 @@ private:
 	void flip();
 	void transpose();
 	bool addTile();
+	void setGrid(Grid grid);
 	bool makeMove(Move move);
 
 	Grid grid_;
@@ -56,6 +58,14 @@ private:
 	std::random_device rd_;
 	std::mt19937 gen_;
 
+	FRIEND_TEST(GameTest, AddTileWorksCorrectly);
+	FRIEND_TEST(GameTest, AddTileFailsWhenGridIsFull);
+	FRIEND_TEST(GameTest, MoveLeftWorks);
+	FRIEND_TEST(GameTest, MoveRightWorks);
+	FRIEND_TEST(GameTest, MoveUpWorks);
+	FRIEND_TEST(GameTest, MoveDownWorks);
+	FRIEND_TEST(GameTest, IsGameOver);
+	FRIEND_TEST(GameTest, ScoreCalculation);
 	friend class GameWindow;
 };
 

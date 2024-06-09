@@ -38,7 +38,7 @@ add_executable(2048_Solver
 target_include_directories(2048_Solver PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 # Link Qt6 libraries
-target_link_libraries(2048_Solver Qt6::Widgets)
+target_link_libraries(2048_Solver Qt6::Widgets gtest gtest_main)
 
 # Add test executable
 add_executable(2048_Solver_test

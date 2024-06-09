@@ -255,6 +255,10 @@ Grid Game::getGrid() {
     return grid_;
 }
 
+void Game::setGrid(Grid grid) {
+    grid_ = std::move(grid);
+}
+
 int Game::getGridSize() {
     return gridSize_;
 }
