@@ -20,7 +20,7 @@
 #include "MonteCarlo.hpp"
 
 constexpr int SPACEBAR_CHAR = 32;
-constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 75;
+constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 150;
 constexpr int WINDOW_SIZE = 500;
 constexpr int GRID_SPACING = 10;
 
@@ -37,7 +37,7 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 signals:
-    void keyPressed(char key, std::map<double, Move, Compare> bestMoves, std::shared_ptr<Game> game);
+    void keyPressed(char key, Move bestMove, std::shared_ptr<Game> game);
 
 private:
     void setupGrid();

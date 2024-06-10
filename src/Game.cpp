@@ -225,7 +225,7 @@ void Game::transpose() {
 }
 
 
-void Game::handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, std::shared_ptr<Game> game) {
+void Game::handleKeyPress(char key, Move bestMove, std::shared_ptr<Game> game) {
     switch (key) {
     case 'A':
         game->moveLeft();
@@ -240,12 +240,7 @@ void Game::handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, s
         game->moveUp();
         break;
     case ' ':
-        for (const auto& pair : bestMoves) {
-            bool validMove = game->makeMove(pair.second);
-            if (validMove) {
-                break;
-            }
-        }
+        game->makeMove(bestMove);
         break;
     default:
         break;

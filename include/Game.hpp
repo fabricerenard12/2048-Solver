@@ -48,7 +48,7 @@ public:
     friend class GameTest_AddTileFailsWhenGridIsFull_Test;
 
 public slots:
-	void handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, std::shared_ptr<Game> game);
+	void handleKeyPress(char key, Move bestMove, std::shared_ptr<Game> game);
 
 private:
 	bool merge();

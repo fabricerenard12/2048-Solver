@@ -5,17 +5,23 @@
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
 
-#include <vector>
-#include <thread>
-#include <mutex>
-#include <map>
+// #include <vector>
+// #include <thread>
+// #include <mutex>
+// #include <map>
+// #include <random>
+#include <QThread>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QVector>
+#include <QMap>
 #include <random>
 #include "Game.hpp"
 
-Game move(Game game, Move move);
+// Game move(Game game, Move move);
 
-void simulate(Game& game, std::mt19937& localGen, double& localScore);
+// void simulate(Game& game, std::mt19937& localGen, double& localScore);
 
-std::map<double, Move, Compare> performMC(Game game, int numberOfSimulationsPerMove);
+Move performMC(Game game, int numberOfSimulationsPerMove);
 
 #endif // !MONTECARLO_H

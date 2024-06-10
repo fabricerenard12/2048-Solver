@@ -42,11 +42,13 @@ void GameWindow::updateGrid() {
 }
 
 void GameWindow::keyPressEvent(QKeyEvent* event) {
-    std::map<double, Move, Compare> bestMoves;
-
+    // std::map<double, Move, Compare> bestMoves;
+    Move bestMove;
     // Perform Monte Carlo Computation
     if (event->key() == SPACEBAR_CHAR) {
-        bestMoves = performMC(*(game_.get()), NUMBER_OF_SIMULATIONS_PER_MOVE);
+        setUpdatesEnabled(false);
+        bestMove = performMC(*(game_.get()), NUMBER_OF_SIMULATIONS_PER_MOVE);
+        setUpdatesEnabled(true);
     }
 
     // if (event->key() == SPACEBAR_CHAR) {
@@ -60,7 +62,7 @@ void GameWindow::keyPressEvent(QKeyEvent* event) {
     //     bestMoves[bestMove.second] = bestMove.first;
     // }
 
-    emit keyPressed(event->key(), bestMoves, game_);
+    emit keyPressed(event->key(), bestMove, game_);
 
     QWidget::keyPressEvent(event);
     updateGrid();
