@@ -20,7 +20,7 @@
 #include "MonteCarlo.hpp"
 
 constexpr int SPACEBAR_CHAR = 32;
-constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 50;
+constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 75;
 constexpr int WINDOW_SIZE = 500;
 constexpr int GRID_SPACING = 10;
 

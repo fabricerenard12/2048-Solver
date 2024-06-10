@@ -5,6 +5,11 @@
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
 
+#include <vector>
+#include <thread>
+#include <mutex>
+#include <map>
+#include <random>
 #include "Game.hpp"
 
 Game move(Game game, Move move);
