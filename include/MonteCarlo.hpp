@@ -5,12 +5,20 @@
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
 
+#include <vector>
+#include <thread>
+#include <memory>
+#include <future>
+#include <algorithm>
+#include <random>
+#include <mutex>
 #include "Game.hpp"
 
-Game move(Game game, Move move);
+constexpr int DEPTH = 50;
 
-void simulate(Game& game, std::mt19937& localGen, double& localScore);
-
-std::map<double, Move, Compare> performMC(Game game, int numberOfSimulationsPerMove);
+std::unique_ptr<Game> move(const Game& game, Move move);
+void simulate(std::unique_ptr<Game> game, std::mt19937& localGen, double& totalScore, std::mutex& scoreMutex);
+void runSimulations(const Game& game, Move currentMove, int numberOfSimulations, double& totalScore, std::mutex& scoreMutex);
+Move performMC(const Game& game, int numberOfSimulationsPerMove, int numThreads);
 
 #endif // !MONTECARLO_H

@@ -16,8 +16,9 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
 # Find the Qt6 package
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
-# Add Google Test
+# Add Google Test and Google Benchmark as subdirectories
 add_subdirectory(googletest)
+add_subdirectory(benchmark)
 
 # Enable AUTOMOC
 set(CMAKE_AUTOMOC ON)
@@ -62,3 +63,19 @@ target_include_directories(2048_Solver_test PUBLIC "${PROJECT_SOURCE_DIR}/includ
 # Enable testing
 enable_testing()
 add_test(NAME 2048_Solver_test COMMAND 2048_Solver_test)
+
+# Add benchmark executable
+add_executable(2048_Solver_benchmark
+    benchmarks/benchmark.cpp
+    src/Game.cpp
+    include/Game.hpp
+    src/MonteCarlo.cpp
+    include/MonteCarlo.hpp
+)
+
+# Link Google Benchmark libraries
+target_link_libraries(2048_Solver_benchmark benchmark::benchmark)
+target_link_libraries(2048_Solver_benchmark Qt6::Widgets gtest gtest_main)
+
+# Include directories for benchmark
+target_include_directories(2048_Solver_benchmark PUBLIC "${PROJECT_SOURCE_DIR}/include")

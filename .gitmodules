@@ -4,3 +4,6 @@
 [submodule "benchmark"]
 	path = benchmark
 	url = https://github.com/google/benchmark.git
+[submodule "folly"]
+	path = folly
+	url = https://github.com/facebook/folly.git

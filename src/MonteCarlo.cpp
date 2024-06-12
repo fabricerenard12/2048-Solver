@@ -4,82 +4,71 @@
 
 #include "MonteCarlo.hpp"
 
-Game move(Game game, Move move) {
-    // Perform move on game
+std::unique_ptr<Game> move(const Game& game, Move move) {
+    std::unique_ptr<Game> newGame = std::make_unique<Game>(game);
     switch (move) {
-    case Move::LEFT:
-        game.moveLeft();
-        break;
-    case Move::RIGHT:
-        game.moveRight();
-        break;
-    case Move::UP:
-        game.moveUp();
-        break;
-    case Move::DOWN:
-        game.moveDown();
-        break;
-    default:
-        break;
-    }
-
-    return game;
-}
-
-void simulate(Game& game, std::mt19937& localGen, double& localScore) {
-    int minValue = 0;
-    int maxValue = 3;
-
-    std::uniform_int_distribution<int> intDistribution(minValue, maxValue);
-
-    // Simulate game until end
-    while (!game.isGameOver()) {
-        Move randomMove = static_cast<Move>(intDistribution(localGen));
-
-        switch (randomMove) {
         case Move::LEFT:
-            game.moveLeft();
+            newGame->moveLeft();
             break;
         case Move::RIGHT:
-            game.moveRight();
+            newGame->moveRight();
             break;
         case Move::UP:
-            game.moveUp();
+            newGame->moveUp();
             break;
         case Move::DOWN:
-            game.moveDown();
+            newGame->moveDown();
             break;
         default:
             break;
-        }
     }
-
-    // Update local score
-    localScore += game.getScore();
+    return newGame;
 }
 
-std::map<double, Move, Compare> performMC(Game game, int numberOfSimulationsPerMove) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+void simulate(std::unique_ptr<Game> game, std::mt19937& localGen, double& totalScore, std::mutex& scoreMutex) {
+    std::uniform_int_distribution<int> intDistribution(0, 3);
+
+    double localScore = 0.0;
+    for (int i = 0; i < DEPTH && !game->isGameOver(); ++i) {
+        Move randomMove = static_cast<Move>(intDistribution(localGen));
+        game = move(*game, randomMove);
+    }
+
+    localScore += game->getScore();
+
+    std::lock_guard<std::mutex> lock(scoreMutex);
+    totalScore += localScore;
+}
+
+void runSimulations(const Game& game, Move currentMove, int numberOfSimulations, double& totalScore, std::mutex& scoreMutex) {
+    thread_local std::random_device rd;
+    thread_local std::mt19937 gen(rd());
+
+    for (int i = 0; i < numberOfSimulations; ++i) {
+        std::unique_ptr<Game> gameCopy = move(game, currentMove);
+        simulate(std::move(gameCopy), gen, totalScore, scoreMutex);
+    }
+}
+
+Move performMC(const Game& game, int numberOfSimulationsPerMove, int numThreads) {
+    std::vector<std::thread> threads;
     std::vector<double> scores(4, 0.0);
-    std::map<double, Move, Compare> moves;
+    std::vector<std::mutex> scoreMutexes(4);
 
-    // Compute best move using Monte Carlo Computation
-    for (int j = 0; j < 4; j++) {
-        Move currentMove = static_cast<Move>(j);
-
-        for (int i = 0; i < numberOfSimulationsPerMove; i++) {
-            Game gameCopy = move(game, currentMove);
-            double localScore = 0.0;
-            simulate(gameCopy, gen, localScore);
-            scores[j] += localScore;
+    for (int j = 0; j < 4; ++j) {
+        for (int t = 0; t < numThreads; ++t) {
+            threads.emplace_back(runSimulations, std::cref(game), static_cast<Move>(j), numberOfSimulationsPerMove / numThreads, std::ref(scores[j]), std::ref(scoreMutexes[j]));
         }
     }
 
-    // Construct moves map
-    for (int i = 0; i < 4; i++) {
-        moves.insert({ scores[i], static_cast<Move>(i) });
+    for (auto& thread : threads) {
+        if (thread.joinable()) {
+            thread.join();
+        }
     }
 
-    return moves;
+    auto bestMoveIter = std::max_element(scores.begin(), scores.end());
+    int bestMoveIndex = std::distance(scores.begin(), bestMoveIter);
+
+    return static_cast<Move>(bestMoveIndex);
 }
