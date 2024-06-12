@@ -18,8 +18,7 @@ void GameWindow::setupWindow() {
 }
 
 void GameWindow::updateGrid() {
-    // Update QLabels of grid with values from Game grid
-    uint64_t grid = game_->getGrid();
+    Grid grid = game_->getGrid();
     for (int i = 0; i < gridSize_ * gridSize_; i++) {
         int bitPosition = i * 4;
         int value = (grid >> bitPosition) & 0xF;
@@ -28,13 +27,12 @@ void GameWindow::updateGrid() {
         if (value == 0) {
             label->setText("");
         } else {
-            label->setText(QString::number(1 << (value))); // Convert to the actual 2048 game value
+            label->setText(QString::number(1 << (value)));
         }
 
         setLabelStyle(label, value);
     }
 
-    // Reset game and grid if game finished
     if (game_->isGameOver()) {
         game_ = std::make_shared<Game>();
         updateGrid();
@@ -42,25 +40,17 @@ void GameWindow::updateGrid() {
 }
 
 void GameWindow::keyPressEvent(QKeyEvent* event) {
-    std::map<double, Move, Compare> bestMoves;
+    Move bestMove;
 
-    // Perform Monte Carlo Computation
     if (event->key() == SPACEBAR_CHAR) {
-        bestMoves = performMC(*(game_.get()), NUMBER_OF_SIMULATIONS_PER_MOVE);
+        bestMove = performMC(
+            *(game_.get()),
+            NUMBER_OF_SIMULATIONS_PER_MOVE,
+            std::thread::hardware_concurrency()
+        );
     }
 
-    // if (event->key() == SPACEBAR_CHAR) {
-    //     // Determine the depth dynamically or set a fixed depth, e.g., 3
-    //     int depth = determineDepth(game_->getGrid());
-        
-    //     // Use Expectimax to find the best move and its evaluation score
-    //     std::pair<Move, double> bestMove = findBestMove(game_, depth);
-        
-    //     // Add the best move and its evaluation score to the map
-    //     bestMoves[bestMove.second] = bestMove.first;
-    // }
-
-    emit keyPressed(event->key(), bestMoves, game_);
+    emit keyPressed(event->key(), bestMove, game_);
 
     QWidget::keyPressEvent(event);
     updateGrid();
@@ -70,7 +60,6 @@ void GameWindow::setupGrid() {
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(GRID_SPACING);
 
-    // Initial setup of QLabels grid
     for (int i = 0; i < gridSize_ * gridSize_; i++) {
         QLabel* label = new QLabel(this);
         label->setFrameShape(QFrame::Panel);

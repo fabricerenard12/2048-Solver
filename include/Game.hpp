@@ -14,7 +14,7 @@
 #include <QDebug>
 #include <QObject>
 #include <vector>
-// #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
 using Grid = uint64_t;
 constexpr int GRID_SIZE = 4;
@@ -40,15 +40,11 @@ public:
 	void setGrid(Grid grid); //TODO: set as private
 	int getGridSize();
 	bool isGameOver();
+	bool reached2048();
 	bool makeMove(Move move); // TODO: set as private
 
-	friend bool operator==(const Game& left, const Game& right);
-	friend std::ostream& operator<<(std::ostream& os, const Game& game);
-    friend class GameTest_AddTileWorksCorrectly_Test;
-    friend class GameTest_AddTileFailsWhenGridIsFull_Test;
-
 public slots:
-	void handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, std::shared_ptr<Game> game);
+	void handleKeyPress(char key, Move bestMove, std::shared_ptr<Game> game);
 
 private:
 	bool merge();
@@ -62,14 +58,8 @@ private:
 	std::random_device rd_;
 	std::mt19937 gen_;
 
-	// FRIEND_TEST(GameTest, AddTileWorksCorrectly);
-	// FRIEND_TEST(GameTest, AddTileFailsWhenGridIsFull);
-	// FRIEND_TEST(GameTest, MoveLeftWorks);
-	// FRIEND_TEST(GameTest, MoveRightWorks);
-	// FRIEND_TEST(GameTest, MoveUpWorks);
-	// FRIEND_TEST(GameTest, MoveDownWorks);
-	// FRIEND_TEST(GameTest, IsGameOver);
-	// FRIEND_TEST(GameTest, ScoreCalculation);
+	friend bool operator==(const Game& left, const Game& right);
+	friend std::ostream& operator<<(std::ostream& os, const Game& game);
 	friend class GameWindow;
 };
 

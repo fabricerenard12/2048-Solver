@@ -149,7 +149,7 @@ bool Game::merge() {
 
                 grid_ |= (static_cast<uint64_t>(sum & 0xF) << bitPositionCurrent);
                 merged = true;
-                col++; // Skip the next tile to avoid double counting
+                col++;
             }
         }
     }
@@ -225,7 +225,7 @@ void Game::transpose() {
 }
 
 
-void Game::handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, std::shared_ptr<Game> game) {
+void Game::handleKeyPress(char key, Move bestMove, std::shared_ptr<Game> game) {
     switch (key) {
     case 'A':
         game->moveLeft();
@@ -240,10 +240,11 @@ void Game::handleKeyPress(char key, std::map<double, Move, Compare> bestMoves, s
         game->moveUp();
         break;
     case ' ':
-        for (const auto& pair : bestMoves) {
-            bool validMove = game->makeMove(pair.second);
-            if (validMove) {
-                break;
+        if (!game->makeMove(bestMove)) {
+            for (int i = 0; i < 3; i++) {
+                if (game->makeMove(static_cast<Move>(i))) {
+                    break;
+                } 
             }
         }
         break;
@@ -262,6 +263,16 @@ Grid Game::getGrid() {
 
 void Game::setGrid(Grid grid) {
     grid_ = grid;
+}
+
+bool Game::reached2048() {
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; ++i) {
+        int tile = (grid_ >> (i * 4)) & 0xF;
+        if (tile == 11) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Game::isGameOver() {
