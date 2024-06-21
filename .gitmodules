@@ -7,3 +7,6 @@
 [submodule "folly"]
 	path = folly
 	url = https://github.com/facebook/folly.git
+[submodule "pytorch"]
+	path = pytorch
+	url = https://github.com/pytorch/pytorch

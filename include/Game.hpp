@@ -56,7 +56,7 @@ private:
 	Grid grid_;
 	int score_;
 	std::random_device rd_;
-	std::mt19937 gen_;
+	std::ranlux48 gen_;
 
 	friend bool operator==(const Game& left, const Game& right);
 	friend std::ostream& operator<<(std::ostream& os, const Game& game);

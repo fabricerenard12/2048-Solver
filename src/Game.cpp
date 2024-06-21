@@ -6,7 +6,7 @@ void printBinary(uint64_t value) {
 }
 
 Game::Game() 
-    : grid_(0), score_(0), rd_(std::random_device()), gen_(std::mt19937(rd_())) {
+    : grid_(0), score_(0), rd_(std::random_device()), gen_(std::ranlux48(rd_())) {
     // Add two random tiles to grid
     int minValue = 0;
     int maxValue = (GRID_SIZE * GRID_SIZE) - 1;
