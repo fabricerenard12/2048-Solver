@@ -15,19 +15,15 @@
 #include <QFont>
 #include <QIcon>
 
+#include "Consts.hpp"
 #include "MonteCarlo.hpp"
-
-constexpr int SPACEBAR_CHAR = 32;
-constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 200;
-constexpr int WINDOW_SIZE = 500;
-constexpr int GRID_SPACING = 10;
 
 class GameWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    GameWindow(QWidget* parent, int gridSize, std::shared_ptr<Game> game);
+    GameWindow(QWidget* parent, std::shared_ptr<Game> game);
     void setupWindow();
     void updateGrid();
 
@@ -44,7 +40,6 @@ private:
     void setLabelStyle(QLabel* label, int value);
 
 private:
-    const int gridSize_;
     std::shared_ptr<Game> game_;
     std::vector<std::vector<QLabel*>> gridLabels;
 };

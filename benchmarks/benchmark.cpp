@@ -4,9 +4,10 @@
 #include "MonteCarlo.hpp"
 
 static int reach2048Count = 0;
+static int numberOfGamesPlayed = 0;
 
 static void BM_2048Game(benchmark::State& state) {
-    constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 200;
+    constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 400;
     int NUMBER_OF_THREADS = std::thread::hardware_concurrency();
     for (auto _ : state) {
         std::unique_ptr<Game> game = std::make_unique<Game>();
@@ -28,12 +29,13 @@ static void BM_2048Game(benchmark::State& state) {
                 reach2048Count++;
             }
         }
-        std::cout << *game << " " << reach2048Count << std::endl;
+        numberOfGamesPlayed++;
+        std::cout << *game << " " << reach2048Count << "/" << numberOfGamesPlayed << std::endl;
     }
 
     state.counters["2048_Reached"] = reach2048Count;
 }
 
-BENCHMARK(BM_2048Game)->Repetitions(20);
+BENCHMARK(BM_2048Game)->Repetitions(50);
 
 BENCHMARK_MAIN();

@@ -1,3 +1,7 @@
+// Game class for the 2048 game logic
+// Author: Fabrice Renard
+// Date : 23 / 06 / 2023
+
 #include "Game.hpp"
 
 void printBinary(uint64_t value) {
@@ -6,8 +10,7 @@ void printBinary(uint64_t value) {
 }
 
 Game::Game() 
-    : grid_(0), score_(0), rd_(std::random_device()), gen_(std::mt19937(rd_())) {
-    // Add two random tiles to grid
+    : grid_(0), score_(0), rd_(std::random_device()), gen_(std::ranlux48(rd_())) {
     int minValue = 0;
     int maxValue = (GRID_SIZE * GRID_SIZE) - 1;
     double probability;
@@ -35,7 +38,6 @@ Game::Game(const Game& other) {
 }
 
 bool Game::addTile() {
-    // Check if grid is full
     bool gridFull = true;
     for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
         int tile = (grid_ >> (i * 4)) & 0xF;
@@ -49,7 +51,6 @@ bool Game::addTile() {
         return false;
     }
 
-    // Set initial random values in grid
     int minValue = 0;
     int maxValue = (GRID_SIZE * GRID_SIZE) - 1;
 

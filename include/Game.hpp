@@ -16,8 +16,9 @@
 #include <vector>
 #include <gtest/gtest.h>
 
+#include "Consts.hpp"
+
 using Grid = uint64_t;
-constexpr int GRID_SIZE = 4;
 enum class Move { LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3 };
 
 struct Compare {
@@ -56,7 +57,7 @@ private:
 	Grid grid_;
 	int score_;
 	std::random_device rd_;
-	std::mt19937 gen_;
+	std::ranlux48 gen_;
 
 	friend bool operator==(const Game& left, const Game& right);
 	friend std::ostream& operator<<(std::ostream& os, const Game& game);

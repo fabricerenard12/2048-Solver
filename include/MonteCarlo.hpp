@@ -12,13 +12,13 @@
 #include <algorithm>
 #include <random>
 #include <mutex>
+#include "Consts.hpp"
 #include "Game.hpp"
-
-constexpr int DEPTH = 50;
+#include "ThreadPool.hpp"
 
 std::unique_ptr<Game> move(const Game& game, Move move);
-void simulate(std::unique_ptr<Game> game, std::mt19937& localGen, double& totalScore, std::mutex& scoreMutex);
-void runSimulations(const Game& game, Move currentMove, int numberOfSimulations, double& totalScore, std::mutex& scoreMutex);
+double simulate(std::unique_ptr<Game> game, std::ranlux48& localGen);
+double runSimulations(const Game& game, Move currentMove, int numberOfSimulations);
 Move performMC(const Game& game, int numberOfSimulationsPerMove, int numThreads);
 
 #endif // !MONTECARLO_H

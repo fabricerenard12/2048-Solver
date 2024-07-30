@@ -25,7 +25,7 @@ std::unique_ptr<Game> move(const Game& game, Move move) {
     return newGame;
 }
 
-void simulate(std::unique_ptr<Game> game, std::mt19937& localGen, double& totalScore, std::mutex& scoreMutex) {
+double simulate(std::unique_ptr<Game> game, std::ranlux48& localGen) {
     std::uniform_int_distribution<int> intDistribution(0, 3);
 
     double localScore = 0.0;
@@ -35,35 +35,37 @@ void simulate(std::unique_ptr<Game> game, std::mt19937& localGen, double& totalS
     }
 
     localScore += game->getScore();
-
-    std::lock_guard<std::mutex> lock(scoreMutex);
-    totalScore += localScore;
+    return localScore;
 }
 
-void runSimulations(const Game& game, Move currentMove, int numberOfSimulations, double& totalScore, std::mutex& scoreMutex) {
+double runSimulations(const Game& game, Move currentMove, int numberOfSimulations) {
     thread_local std::random_device rd;
-    thread_local std::mt19937 gen(rd());
+    thread_local std::ranlux48 gen(rd());
+
+    double totalScore = 0.0;
 
     for (int i = 0; i < numberOfSimulations; ++i) {
         std::unique_ptr<Game> gameCopy = move(game, currentMove);
-        simulate(std::move(gameCopy), gen, totalScore, scoreMutex);
+        totalScore += simulate(std::move(gameCopy), gen);
     }
+
+    return totalScore;
 }
 
 Move performMC(const Game& game, int numberOfSimulationsPerMove, int numThreads) {
-    std::vector<std::thread> threads;
-    std::vector<double> scores(4, 0.0);
-    std::vector<std::mutex> scoreMutexes(4);
+    ThreadPool pool(numThreads);
+    std::vector<std::future<double>> futures;
 
     for (int j = 0; j < 4; ++j) {
         for (int t = 0; t < numThreads; ++t) {
-            threads.emplace_back(runSimulations, std::cref(game), static_cast<Move>(j), numberOfSimulationsPerMove / numThreads, std::ref(scores[j]), std::ref(scoreMutexes[j]));
+            futures.push_back(pool.enqueue(runSimulations, std::cref(game), static_cast<Move>(j), numberOfSimulationsPerMove / numThreads));
         }
     }
 
-    for (auto& thread : threads) {
-        if (thread.joinable()) {
-            thread.join();
+    std::vector<double> scores(4, 0.0);
+    for (int j = 0; j < 4; ++j) {
+        for (int t = 0; t < numThreads; ++t) {
+            scores[j] += futures[j * numThreads + t].get();
         }
     }
 
