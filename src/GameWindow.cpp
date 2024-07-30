@@ -1,10 +1,14 @@
+// GameWindow class for the QT6 view
+// Author: Fabrice Renard
+// Date : 23 / 06 / 2023
+
 #include "GameWindow.hpp"
 
-GameWindow::GameWindow(QWidget* parent, int gridSize, std::shared_ptr<Game> game)
-    : QWidget(parent), gridSize_(gridSize), game_(game), gridLabels(std::vector<std::vector<QLabel*>>(gridSize_)) {
+GameWindow::GameWindow(QWidget* parent, std::shared_ptr<Game> game)
+    : QWidget(parent), game_(game), gridLabels(std::vector<std::vector<QLabel*>>(GRID_SIZE)) {
 
     for (std::vector<QLabel*>& row : gridLabels) {
-        row.resize(gridSize_);
+        row.resize(GRID_SIZE);
     }
 
     setupWindow();
@@ -19,10 +23,10 @@ void GameWindow::setupWindow() {
 
 void GameWindow::updateGrid() {
     Grid grid = game_->getGrid();
-    for (int i = 0; i < gridSize_ * gridSize_; i++) {
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
         int bitPosition = i * 4;
         int value = (grid >> bitPosition) & 0xF;
-        QLabel* label = gridLabels[i / gridSize_][i % gridSize_];
+        QLabel* label = gridLabels[i / GRID_SIZE][i % GRID_SIZE];
 
         if (value == 0) {
             label->setText("");
@@ -60,14 +64,14 @@ void GameWindow::setupGrid() {
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setSpacing(GRID_SPACING);
 
-    for (int i = 0; i < gridSize_ * gridSize_; i++) {
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
         QLabel* label = new QLabel(this);
         label->setFrameShape(QFrame::Panel);
         label->setFrameShadow(QFrame::Sunken);
         label->setAlignment(Qt::AlignCenter);
 
-        int row = i / gridSize_;
-        int col = i % gridSize_;
+        int row = i / GRID_SIZE;
+        int col = i % GRID_SIZE;
 
         gridLayout->addWidget(label, row, col);
         gridLabels[row][col] = label;
@@ -101,7 +105,6 @@ void GameWindow::setLabelStyle(QLabel* label, int value) {
     QColor backgroundColor;
     QColor textColor;
 
-    // Set style according to tile value
     switch (value) {
     case 1:
         backgroundColor = QColor("#eee4da");

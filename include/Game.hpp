@@ -16,8 +16,9 @@
 #include <vector>
 #include <gtest/gtest.h>
 
+#include "Consts.hpp"
+
 using Grid = uint64_t;
-constexpr int GRID_SIZE = 4;
 enum class Move { LEFT = 0, RIGHT = 1, UP = 2, DOWN = 3 };
 
 struct Compare {
