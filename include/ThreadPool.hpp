@@ -1,3 +1,7 @@
+// Thread Pool used in the Monte Carlo simulation
+// Author: Fabrice Renard
+// Date : 30 / 08 / 2024
+
 #include <vector>
 #include <thread>
 #include <queue>

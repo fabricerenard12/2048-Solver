@@ -22,7 +22,6 @@ find_package(Qt6 COMPONENTS Widgets REQUIRED)
 # Add Google Test and Google Benchmark as subdirectories
 add_subdirectory(googletest)
 add_subdirectory(benchmark)
-# add_subdirectory(pytorch)
 
 # Enable AUTOMOC
 set(CMAKE_AUTOMOC ON)
@@ -44,14 +43,9 @@ add_executable(2048_Solver
 
 # Include directories
 target_include_directories(2048_Solver PUBLIC "${PROJECT_SOURCE_DIR}/include")
-# include_directories(${CMAKE_SOURCE_DIR}/pytorch/torch/csrc/api/include)
-# include_directories(${CMAKE_SOURCE_DIR}/pytorch/torch/lib/include)
 
 # Link Qt6 libraries
 target_link_libraries(2048_Solver Qt6::Widgets gtest gtest_main)
-
-# Link Torch libraries
-# target_link_libraries(2048_Solver "${TORCH_LIBRARIES}")
 
 # Add test executable
 add_executable(2048_Solver_test
@@ -69,9 +63,6 @@ target_link_libraries(2048_Solver_test
     gtest
     gtest_main
 )
-
-# Link Torch libraries
-# target_link_libraries(2048_Solver_test "${TORCH_LIBRARIES}")
 
 # Include directories for tests
 target_include_directories(2048_Solver_test PUBLIC "${PROJECT_SOURCE_DIR}/include")
@@ -95,9 +86,6 @@ add_executable(2048_Solver_benchmark
 # Link Google Benchmark libraries
 target_link_libraries(2048_Solver_benchmark benchmark::benchmark)
 target_link_libraries(2048_Solver_benchmark Qt6::Widgets gtest gtest_main)
-
-# Link Torch libraries
-# target_link_libraries(2048_Solver "${TORCH_LIBRARIES}")
 
 # Include directories for benchmark
 target_include_directories(2048_Solver_benchmark PUBLIC "${PROJECT_SOURCE_DIR}/include")
