@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     std::shared_ptr<Game> game = std::make_shared<Game>();
-    GameWindow w(nullptr, game);
+    GameWindow w(nullptr, game, true);
 
     QObject::connect(&w, &GameWindow::keyPressed, game.get(), &Game::handleKeyPress);
 

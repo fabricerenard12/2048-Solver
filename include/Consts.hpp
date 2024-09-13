@@ -6,8 +6,9 @@
 #define CONSTS_H
 
 constexpr int SPACEBAR_CHAR = 32;
-constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 350;
+constexpr int NUMBER_OF_SIMULATIONS_PER_MOVE = 300;
 constexpr int DEPTH = 2000;
+constexpr int DELAY = 20;
 constexpr int WINDOW_SIZE = 500;
 constexpr int GRID_SPACING = 10;
 constexpr int GRID_SIZE = 4;

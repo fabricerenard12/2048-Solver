@@ -4,7 +4,7 @@
 
 #include "GameWindow.hpp"
 
-GameWindow::GameWindow(QWidget* parent, std::shared_ptr<Game> game)
+GameWindow::GameWindow(QWidget* parent, std::shared_ptr<Game> game, bool autoplay)
     : QWidget(parent), game_(game), gridLabels(std::vector<std::vector<QLabel*>>(GRID_SIZE)) {
 
     for (std::vector<QLabel*>& row : gridLabels) {
@@ -15,6 +15,10 @@ GameWindow::GameWindow(QWidget* parent, std::shared_ptr<Game> game)
     setupGrid();
     applyStyleSheet();
     setWindowSize();
+
+    if (autoplay) {
+        startAutoPlay();
+    }
 }
 
 void GameWindow::setupWindow() {
@@ -42,6 +46,26 @@ void GameWindow::updateGrid() {
         updateGrid();
     }
 }
+
+void GameWindow::startAutoPlay() {
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &GameWindow::autoPlayMove);
+    timer->start(DELAY);
+}
+
+void GameWindow::autoPlayMove() {
+    Move bestMove;
+
+    bestMove = performMC(
+        *(game_.get()),
+        NUMBER_OF_SIMULATIONS_PER_MOVE,
+        std::thread::hardware_concurrency()
+    );
+
+    emit keyPressed(SPACEBAR_CHAR, bestMove, game_);
+    updateGrid();
+}
+
 
 void GameWindow::keyPressEvent(QKeyEvent* event) {
     Move bestMove;

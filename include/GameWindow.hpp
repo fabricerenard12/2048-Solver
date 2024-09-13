@@ -14,6 +14,7 @@
 #include <QColor>
 #include <QFont>
 #include <QIcon>
+#include <QTimer>
 
 #include "Consts.hpp"
 #include "MonteCarlo.hpp"
@@ -23,9 +24,10 @@ class GameWindow : public QWidget
     Q_OBJECT
 
 public:
-    GameWindow(QWidget* parent, std::shared_ptr<Game> game);
+    GameWindow(QWidget* parent, std::shared_ptr<Game> game, bool autoplay = false);
     void setupWindow();
     void updateGrid();
+    void startAutoPlay();
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
@@ -38,6 +40,7 @@ private:
     void applyStyleSheet();
     void setWindowSize();
     void setLabelStyle(QLabel* label, int value);
+    void autoPlayMove();
 
 private:
     std::shared_ptr<Game> game_;
